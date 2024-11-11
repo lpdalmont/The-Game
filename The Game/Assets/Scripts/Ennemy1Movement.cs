@@ -14,6 +14,8 @@ public class Ennemy1Movement : MonoBehaviour
     private float cooldownTimer = Mathf.Infinity; 
     Animator animator;
     
+    private Health playerHealth;
+    
     private EnnemyPatrol ennemyPatrol;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -29,7 +31,7 @@ public class Ennemy1Movement : MonoBehaviour
         if (PlayerInSight())
         {
             ennemyPatrol.setTriggered(true);
-            if (RdyTofight())
+            if (RdyTofight() && playerHealth.GetCurrentHealth() != 0)
             {
                 if (cooldownTimer >= attackCooldown)
                 {
@@ -41,7 +43,7 @@ public class Ennemy1Movement : MonoBehaviour
         else
         {   
             ennemyPatrol.setTriggered(false);
-            if (RdyTofight())
+            if (RdyTofight() && playerHealth.GetCurrentHealth() != 0)
             {
                 if (cooldownTimer >= attackCooldown)
                 {
@@ -63,6 +65,10 @@ public class Ennemy1Movement : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right * rangeX * transform.localScale.x * colliderDistance,
             new Vector3(boxCollider.bounds.size.x * rangeX, boxCollider.bounds.size.y, boxCollider.bounds.size.z), 0, Vector2.left, 0, playerLayer);
+        
+        if(hit.collider != null)
+            playerHealth = hit.collider.GetComponent<Health>();
+        
         return hit.collider != null;
     }
 
@@ -80,6 +86,16 @@ public class Ennemy1Movement : MonoBehaviour
         RaycastHit2D hit = Physics2D.BoxCast(boxCollider.bounds.center + transform.right * sightrangeX * transform.localScale.x * colliderDistance,
             new Vector3(boxCollider.bounds.size.x * sightrangeX, boxCollider.bounds.size.y * sightRangeY, boxCollider.bounds.size.z), 0f, Vector2.left, 0f, playerLayer);
         return hit.collider != null;
+    }
+
+    private void DamagePlayer()
+    {
+
+            if (RdyTofight())
+            {
+                playerHealth.TakeDamage(damage);
+            }
+
     }
     
 }
