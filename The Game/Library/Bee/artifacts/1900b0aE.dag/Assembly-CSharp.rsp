@@ -445,6 +445,8 @@
 "Assets/Scripts/Ennemy1Movement.cs"
 "Assets/Scripts/EnnemyPatrol.cs"
 "Assets/Scripts/HealthStatus.cs"
+"Assets/Scripts/HealthSystem/Health.cs"
+"Assets/Scripts/HealthSystem/HealthBar.cs"
 "Assets/Scripts/PlayerMovement.cs"
 -langversion:9.0
 /deterministic
