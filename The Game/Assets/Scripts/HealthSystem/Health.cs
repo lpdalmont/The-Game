@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,6 +8,11 @@ public class Health : MonoBehaviour
     public float currentHealth;
     private Animator animator;
     private bool isDead;
+    
+    [Header ("Health Regen")]
+    [SerializeField] private float healthRegenRate;
+    [SerializeField] private float secsBeforeRegen;
+    private bool readyToRegenerate;
     
     [Header ("iFrames")]
     [SerializeField]private float iFramesDuration;
@@ -19,17 +25,26 @@ public class Health : MonoBehaviour
         currentHealth = startingHealth;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        readyToRegenerate = true;
     }
-    
+
+    public void Update()
+    {
+        if (readyToRegenerate)
+        {
+            currentHealth = Mathf.Clamp(currentHealth + healthRegenRate * Time.deltaTime, 0, startingHealth);
+        }
+    }
 
     public void TakeDamage(float damage)
     {
         currentHealth = Mathf.Clamp(currentHealth - damage, 0, startingHealth);
-
+        readyToRegenerate = false;
         if (currentHealth > 0)
-        {
+        {   
             animator.SetTrigger("hurt");
             StartCoroutine(Invulnerability());
+            StartCoroutine(HealthRegen());
 
 
         }
@@ -69,5 +84,11 @@ public class Health : MonoBehaviour
         }
         
         Physics2D.IgnoreLayerCollision(7, 8, false);
+    }
+
+    private IEnumerator HealthRegen()
+    {   
+        yield return new WaitForSecondsRealtime(secsBeforeRegen);
+        readyToRegenerate = true;
     }
 }

@@ -1447,6 +1447,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 100
   currentHealth: 0
+  healthRegenRate: 10
+  secsBeforeRegen: 5
   iFramesDuration: 2
   numberOfFlashes: 3
 --- !u!1 &420282226
